@@ -9,8 +9,9 @@
 #' @param read.only : boolean {TRUE, FALSE}. Default=FALSE. Specifies the type of return of the function (@see @return for details).
 #' @param open.url : boolean {TRUE, FALSE}. Default=FALSE. If TRUE, opens the documentation page related to the @v2.endpoint specified.
 #' 
-#' @return: a list of parameters of the specified @v2.endpoint having NULL as value (if @read.only is TRUE), or will print the parameters
-#' alongside with their description (if @read.only is FALSE). If no @v2.endpoint is specified, prints all the endpoints available for request. 
+#' @return: a list of parameters of the specified @v2.endpoint having NULL as value (if @read.only is FALSE), or will print the 
+#' parameters alongside with their description (if @read.only is TRUE). If no @v2.endpoint is specified, prints all the endpoints 
+#' available for request. 
 #' 
 #' 
 v2_get_endpoint_parameters <- function(v2.endpoint = NULL, read.only = FALSE, open.url = FALSE) {
@@ -74,18 +75,29 @@ v2_get_endpoint_parameters <- function(v2.endpoint = NULL, read.only = FALSE, op
     
     if(v2.endpoint %in% names(v2.endpoints_list) == FALSE) {
       stop("INPUT ERROR: the endpoint provided is wrong!");
-    }    
+    };
+    
     if(open.url == TRUE) {
       browseURL(v2.endpoints_list[v2.endpoint][[1]]["url"][[1]]);
     };
+    
     if(read.only == FALSE) {
       return(sapply(v2.endpoints_list[v2.endpoint][[1]][[1]], "[[", 1));
     } 
     else {
-      knitr::kable(sapply(v2.endpoints_list[v2.endpoint][[1]][[1]], "[[", 2), caption = v2.endpoint, col.names = c("Description"), align = c("c", "c"));
+      knitr::kable(sapply(v2.endpoints_list[v2.endpoint][[1]][[1]], "[[", 2), 
+                   caption = v2.endpoint, col.names = c("Description"), align = c("c", "c"));
     };
+    
   } 
   else { # if no endpoint is provided;
-    knitr::kable(names(v2.endpoints_list), col.names = "Available Endpoints", align = "c");
+    
+    if(read.only == TRUE | open.url == TRUE) {
+      stop("INPUT ERROR: no endpoint provided!")
+    }
+    else {
+      knitr::kable(names(v2.endpoints_list), col.names = "Available endpoints", align = "c");
+    };
+    
   };
-}; v2_get_endpoint_parameters(v2.endpoint = "/2/tweets/search/all", read.only = TRUE, open.url = FALSE);
+}; # v2_get_endpoint_parameters(v2.endpoint = "/2/tweets/search/all", read.only = TRUE, open.url = FALSE);

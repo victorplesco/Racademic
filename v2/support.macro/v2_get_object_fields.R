@@ -7,6 +7,7 @@
 #' 
 #' @param v2.object : string {"/2/___"}. Default=NULL. Specifies an object for which a list of fields is returned.
 #' @param read.only : boolean {TRUE, FALSE}. Default=FALSE. Specifies the type of return of the function (@see @return for details).
+#' @param custom.fields : vector of strings {"FIELD_1", ...}. Default=NULL. Customizes the return, or print, by subsetting the fields.
 #' @param open.url : boolean {TRUE, FALSE}. Default=FALSE. If TRUE, opens the documentation page related to the @v2.object specified.
 #' 
 #' @return: (if @read.only is TRUE) a list of parameters of the specified @v2.object all collapsed with comma as separator (@e.g. "id,
@@ -14,7 +15,7 @@
 #' description (if @read.only is FALSE). If no @v2.object is specified, prints all the objects available for request. 
 #' 
 #' 
-v2_get_object_fields <- function(v2.object = NULL, read.only = FALSE, open.url = FALSE) {
+v2_get_object_fields <- function(v2.object = NULL, read.only = FALSE, custom.fields = NULL, open.url = FALSE) {
   
   #' @description: building a container for each object with its respective fields. Alongside each field there is a short description 
   #' assessing the information it represents.
@@ -116,26 +117,53 @@ v2_get_object_fields <- function(v2.object = NULL, read.only = FALSE, open.url =
   
   #' @description: building dependencies of @open.url and @read.only with @v2.object. If @v2.object is NULL, prints the objects
   #' available for request, else, depending on the value of @read.only, will return (if FALSE) or print (if TRUE) the fields of the 
-  #' specified @v2.object. Also if @open.url is TRUE, the `browseURL()` function will be activated and the documentation page related 
-  #' to the provided @v2.object will be opened in your browser (@see `browseURL()` for more details).
+  #' specified @v2.object. It is possible to customize the return, or print, by providing a set of fields through @custom.fields. Also if 
+  #' @open.url is TRUE, the `browseURL()` function will be activated and the documentation page related to the provided @v2.object will 
+  #' be opened in your browser (@see `browseURL()` for more details).
   #' 
   #' 
   if(!is.null(v2.object)) { # if an object is provided;
     
-    if(v2.object %in% names(v2.objects_list) == FALSE) {
+    if(length(which(custom.fields %in% names(v2.objects_list[v2.object][[1]]["fields"][[1]]) == TRUE)) != length(custom.fields)) { # Checking errors in custom.fields;
+      stop("INPUT ERROR: the following fields to not belong to ", v2.object, 
+           " [", paste0(custom.fields[which(custom.fields %in% names(v2.objects_list[v2.object][[1]]["fields"][[1]]) == FALSE)], collapse = ", "), "] ");
+    };
+    
+    if(v2.object %in% names(v2.objects_list) == FALSE) { # Checking errors in object;
       stop("INPUT ERROR: the object provided is wrong!");
-    }    
+    };
+    
     if(open.url == TRUE) {
       browseURL(v2.objects_list[v2.object][[1]]["url"][[1]]);
     };
+    
     if(read.only == FALSE) {
-      return(paste(names(v2.objects_list[v2.object][[1]]["fields"][[1]]), collapse = ","));
+      if(!is.null(custom.fields)) { # if custom fields provided (RETURN);
+        return(paste(names(v2.objects_list[v2.object][[1]]["fields"][[1]][custom.fields]), collapse = ","));
+      }
+      else { # if no custom fields provided (RETURN);
+        return(paste(names(v2.objects_list[v2.object][[1]]["fields"][[1]]), collapse = ","));
+      };
     } 
     else {
-      knitr::kable(sapply(v2.objects_list[v2.object][[1]]["fields"][[1]], "[[", 1), caption = v2.object, col.names = c("Description"), align = c("c", "c"));
+      if(!is.null(custom.fields)) { # if custom fields provided (PRINT);
+        knitr::kable(sapply(v2.objects_list[v2.object][[1]]["fields"][[1]][custom.fields], "[[", 1), 
+                     caption = v2.object, col.names = c("Description"), align = c("c", "c"));
+      }
+      else { # if no custom fields provided (PRINT);
+        knitr::kable(sapply(v2.objects_list[v2.object][[1]]["fields"][[1]], "[[", 1), 
+                     caption = v2.object, col.names = c("Description"), align = c("c", "c"));
+      };
     };
+    
   } 
   else { # if no object is provided;
-    knitr::kable(names(v2.objects_list), col.names = "Available Objects", align = "c");
+    
+    if(read.only == TRUE | !is.null(custom.fields) | open.url == TRUE) {
+      stop("INPUT ERROR: no object provided!");
+    }
+    else {
+      knitr::kable(names(v2.objects_list), col.names = "Available Objects", align = "c");
+    }
   };
-}; # v2_get_object_fields(v2.object = "tweet.fields", read.only = FALSE, open.url = TRUE);
+}; # v2_get_object_fields(v2.object = "tweet.fields", read.only = TRUE, custom.fields = c("id", "text", "attachments"), open.url = FALSE);
