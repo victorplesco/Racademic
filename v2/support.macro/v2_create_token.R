@@ -1,3 +1,8 @@
 v2_create_token <- function(token = NULL) {
-  return(c(`Authorization` = sprintf('Bearer %s', token)));
+  
+  if(is.null(token)) {
+    stop("INPUT ERROR: No token provided!");
+  } else {
+    return(c(`Authorization` = sprintf('Bearer %s', token)));
+  }
 };

@@ -2,28 +2,43 @@
 #' @lastupdate: 2021-04-04
 #' 
 #' 
-#' @name: *v2_validate_request*
-#' @description: validates the input parameters necessary for the query;
-#' @param endpoint : @see v2_get_query_parameters for the available Twitter API v2 endpoints;
-#' @param ...      : @see v2_get_query_parameters for the list of parameters per endpoint;
-#' @return: list of parameters in the format requested by Twitter API v2;
+#' @name: *v2_validate_fullarchive_request*
+#' @description: 
+#' 
+#' @param endpoint : 
+#' @param product_track :
+#' @param ... : 
 #' 
 #' 
-v2_validate_request <- function(endpoint = NULL, product_track = NULL, ...) {
+v2_validate_fullarchive_request <- function(endpoint = NULL, product_track = NULL, ...) {
   
-  param_input = list(...); # list of input parameters. "..." are used since for each endpoint there are different parameters;
+  param_input = list(...); # list of input parameters;
   
-  #' @section:
+  #' @description:
+  #'
+  #' @academic.conditions
+  product.conditions = list (
+    `max_results`          = list(`max_results_min` = 10, `max_results_max` = 500)
+    
+  );
+  #'
+  #'
+  #' @standard.conditions
+  product.conditions = list (
+    
+  );
+  
+  
   #' @description: in order to validate the request we first have to understand which are the parameters accepted by a specific endpoint.
-  #' Therefore as a first step we call *v2_get_endpoint_parameters* and provide it the *endpoint* the user have specified and set *return*
-  #' as TRUE in order to gather a list of accepted parameters by that endpoint that we save in `param_list`.
+  #' Therefore as a first step we call *v2_get_endpoint_parameters* and provide it an *endpoint* which comes in based on the function
+  #' that is calling this function (i.e. *v2_search_fullarchive* will call this function and insert */2/tweets/search/all* as endpoint.
   #' @see: *v2_get_endpoint_parameters*
   #' 
-  #' 
   #' @param_list
-  source(paste0(sub("search-tweets-r.*", "", dirname(rstudioapi::getSourceEditorContext()$path)), "search-tweets-r/v2/support.macro/v2_get_query_parameters.R"));
+  source(paste0(sub("search-tweets-r.*", "", dirname(rstudioapi::getSourceEditorContext()$path)), "search-tweets-r/v2/support.macro/v2_get_endpoint_parameters.R"));
   param_list = v2_get_endpoint_parameters(show.endpoints = FALSE, endpoint = endpoint, show.parameters = FALSE, return = TRUE, open.url = FALSE);
   
+
   #' [###################################################################################################################] '#
   #' [## From here on going,  one  should create a function assessing limits per product track and split the  validate ##] '#
   #' [## function into ad-hoc macro functions for each product track, in turn split into micro functions per endpoint. ##] '#

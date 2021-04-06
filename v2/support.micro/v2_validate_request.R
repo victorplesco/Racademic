@@ -72,5 +72,5 @@ v2_validate_request <- function(endpoint = NULL, ...) {
   if(!is.null(param_input$place.fields)) {param_list["place.fields"] = v2_get_object_fields(object = "place.fields", fields = param_input$place.fields);};
   if(!is.null(param_input$poll.fields )) {param_list["poll.fields" ] = v2_get_object_fields(object = "poll.fields",  fields = param_input$poll.fields );};
 
-}; v2_validate_request(endpoint = "/2/tweets/search/recent", max_results = 10, tweet.fields = c("all"), end_time = "2021-04-04T16:59:22Z");
-
+  return(param_list);
+}; # v2_validate_request(endpoint = "/2/tweets/search/recent", max_results = 10, tweet.fields = c("all"), end_time = "2021-04-04T16:59:22Z");
