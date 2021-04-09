@@ -2,6 +2,7 @@
 
 export(supp_get_conditions)
 export(supp_get_endpoint_parameters)
+export(supp_get_expansion_fields)
 export(supp_get_object_fields)
 export(supp_validate_request)
 export(v2_search_fullarchive)

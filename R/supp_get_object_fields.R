@@ -2,34 +2,35 @@
 #' 
 #' 
 #' @title supp_get_object_fields
-#' @description Getter for the fields of the objects available for request on the new Twitter API v2. 
+#' @description Getter for the fields of the expansions available for request on the Twitter API v2. 
+#'
+#' @param object string \{"tweet", "user", "..."\}. Specifies an object for which a comma separated string of fields is returned.
+#' @param fields vector of strings (e.g. "field_\{1\}", ...). Specifies a subset of fields to be returned (accepts "all"). To 
+#' request all but some fields, append "-" in front of each field in the input vector (e.g. "-field_\{1\}", ...). 
 #' 
-#' @param v2.object string ("/2/___"). Specifies an object for which a list of fields is returned.
-#' @param fields vector of strings ("FIELD_1", ...). If specified, subsets the returned fields (accepts "all"). 
-#' 
-#' @return A list of fields for the specified v2.object all collapsed with comma as separator (e.g. "id,text,attachments").
+#' @return A comma separated string of fields (e.g. "author_id,geo.place_id").
 #' 
 #' @export
-supp_get_object_fields <- function(v2.object, fields) {
+supp_get_object_fields <- function(object, fields) {
   
-  v2.objects_switch = switch(v2.object,
-    
-     tweet.fields  = c(
+  object_switch = switch(object,
+                             
+    tweet = c(
       "id"                  ,
       "text"                ,
       "attachments"         ,
       "author_id"           ,
-      "context_annotations" ,
+      # "context_annotations" ,
       "conversation_id"     ,
       "created_at"          ,
-      "entities"            ,
+      # "entities"            ,
       "geo"                 ,
       "in_reply_to_user_id" ,
       "lang"                ,
-      "non_public_metrics"  ,
-      "organic_metrics"     ,
-      "possiby_sensitive"   ,
-      "promoted_metrics"    ,
+      # "non_public_metrics"  ,
+      # "organic_metrics"     ,
+      "possibly_sensitive"  ,
+      # "promoted_metrics"    ,
       "public_metrics"      ,
       "referenced_tweets"   ,
       "reply_settings"      ,
@@ -37,14 +38,12 @@ supp_get_object_fields <- function(v2.object, fields) {
       "withheld"            
     ),
     
-     user.fields  = c(
+    user = c(
       "id"                  ,
       "name"                ,
       "username"            ,
       "created_at"          ,
       "description"         ,
-      "entities"            ,
-      "created_at"          ,
       "entities"            ,
       "location"            ,
       "pinned_tweet_id"     ,
@@ -56,20 +55,20 @@ supp_get_object_fields <- function(v2.object, fields) {
       "withheld"            
     ),
     
-     media.fields  = c(
+    media = c(
       "media_key"           ,
       "type"                ,
       "duration_ms"         ,
       "height"              ,
-      "non_public_metrics"  ,
-      "organic_metrics"     ,
+      # "non_public_metrics"  ,
+      # "organic_metrics"     ,
       "preview_image_url"   ,
-      "promoted_metrics"    ,
+      # "promoted_metrics"    ,
       "public_metrics"      ,
       "width"               
     ),
     
-     poll.fields  = c(
+    poll = c(
       "id"                  ,
       "options"             ,
       "duration_minutes"    ,
@@ -77,7 +76,7 @@ supp_get_object_fields <- function(v2.object, fields) {
       "voting_status"       
     ),
     
-     place.fields  = c(
+    place = c(
       "full_name"           ,
       "id"                  ,
       "contained_within"    ,
@@ -91,13 +90,28 @@ supp_get_object_fields <- function(v2.object, fields) {
     stop("The provided object is wrong or is not handled!")
   );  
   
-  if(any(fields == "all")) {
-    return(paste(v2.objects_switch, collapse = ","));
-  } 
-  else {
-    if(anyNA(match(fields, v2.objects_switch))) { # Checking errors in fields;
-      stop("The following fields do not belong to ", v2.object, 
-           " [", paste0(fields[which(fields %in% v2.objects_switch == FALSE)], collapse = ", "), "] ");
-    } else {return(paste(fields, collapse = ","));};
+  if(identical(fields, "all")) { # Case 1: fields = c("all");
+    return(paste(object_switch, collapse = ","));
+  } else {
+    
+    # If mismatch;
+    if(anyNA(match(sub("^-", "", fields), object_switch))) { 
+      
+      ifelse(any(sub("^-", "", fields) == "all"), # Case 2: fields = c("all", "field_{1}", ...);
+             stop("The request to \"all\" is a standalone!"),
+             stop("The following fields do not belong to ", object, # Case 3: fields = c("wrong_field_{1}", "field_{1}", ...);
+                  " [", paste0(setdiff(sub("^-", "", fields), object_switch), collapse = ", "), "]!"));
+      
+    } else {
+      
+      # If no mismatch;
+      ifelse(any(duplicated(sub("^-", "", fields))), # Case 4: fields = c("field_{1}", "field_{1}", ...);
+             stop("Duplicated fields [", paste(sub("^-", "", fields)[which(duplicated(sub("^-", "", fields)))], collapse = ", "), "] have been requested!"),
+             ifelse(any(grepl("-", fields) == any(!grepl("-", fields))), # Case 5: fields = c("-field_{1}", "field_{2}", ...);
+                    stop("The request to \"-\" is a standalone!"),
+                    ifelse(any(grepl("-", fields)), # Case 6: fields = c("-field_{1}", "-field_{2}", ...);
+                           return(paste(grep(paste(sub("^-", "", fields), collapse = "|"), object_switch, invert = TRUE, value = TRUE), collapse = ",")),
+                           return(paste(fields, collapse = ","))))); # Case 7: fields = c("field_{1}", "field_{2}", ...);
+    };
   };
 };

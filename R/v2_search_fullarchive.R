@@ -18,7 +18,7 @@ v2_search_fullarchive <- function(v2.token, product_track, query,
                                   start_time = NULL, end_time = NULL, max_results = 10, next_token = NULL, since_id = NULL, until_id = NULL, 
                                   expansions = NULL, tweet.fields = NULL, user.fields = NULL, media.fields = NULL, place.fields = NULL, poll.fields = NULL) {
   
-  param_list = v2_validate_request(
+  param_list = supp_validate_request(
     v2.endpoint = "/2/tweets/search/all", product_track = product_track, query = query, 
     start_time = start_time, end_time = end_time, max_results = max_results, next_token = next_token, since_id = since_id, until_id = until_id, expansions = expansions,
     tweet.fields = tweet.fields, user.fields = user.fields, media.fields = media.fields, place.fields = place.fields, poll.fields = poll.fields);
@@ -28,7 +28,6 @@ v2_search_fullarchive <- function(v2.token, product_track, query,
   
   # source(paste0(sub("search-tweets-r.*", "", dirname(rstudioapi::getSourceEditorContext()$path)), "search-tweets-r/v2/support.micro/v2_validate_response.R"));
   # v2_validate_response(headers = response$all_headers);
-  # return(param_list)
+  return(param_list)
   
-}; # v2_search_fullarchive(token = NULL, product_track = "academic", query = "btc -is:retweet", max_results = 10, tweet.fields = "all")
-help(v2_search_fullarchive)
+}; 

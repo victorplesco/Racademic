@@ -1,11 +1,10 @@
 Type: Package
-Package: v2rtweet
-Title: Collecting Twitter Data
+Package: racademic
+Title: Collect Twitter Full-Archive Data 
 Version: 0.0.1
 Author: Victor Plesco <plesco.victor@gmail.com>
-Description: An implementation of calls designed to collect and organize
-    Twitter data via Twitter's REST Application Program Interfaces (API), 
-    which can be found at the following URL: <https://developer.twitter.com/en/docs>.
+Description: An implementation of calls designed to access Tweets via the
+	recent and full-archive search REST endpoints of the Twitter API v2.
 License: MIT LICENSE
 Depends:
 Encoding: UTF-8
