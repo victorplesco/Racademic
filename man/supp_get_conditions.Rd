@@ -7,13 +7,15 @@
 supp_get_conditions(v2.endpoint, product_track)
 }
 \arguments{
-\item{product_track}{}
+\item{v2.endpoint}{string \{"/2/___"\}. Specifies an endpoint for which a list of query conditions is returned.}
+
+\item{product_track}{string \{"academic" or "standard"\}. Specifies the type of developer account in possess.}
 }
 \value{
-
+A list of query conditions (e.g. max.max_results = 500, min.max_results = 10, ect.).
 }
 \description{
-
+Getter for the query conditions of the endpoints available for request on the Twitter API v2.
 }
 \author{
 : Victor Plesco

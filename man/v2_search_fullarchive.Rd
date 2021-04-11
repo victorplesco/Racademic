@@ -2,11 +2,14 @@
 % Please edit documentation in R/v2_search_fullarchive.R
 \name{v2_search_fullarchive}
 \alias{v2_search_fullarchive}
-\title{v2_get_endpoint_parameters}
+\title{v2_search_fullarchive}
 \usage{
 v2_search_fullarchive(
-  v2.token,
+  token,
   product_track,
+  safe.dir = NULL,
+  parse = FALSE,
+  test = FALSE,
   query,
   start_time = NULL,
   end_time = NULL,
@@ -23,22 +26,40 @@ v2_search_fullarchive(
 )
 }
 \arguments{
-\item{v2.endpoint}{string ("/2/___"). . Specifies an endpoint for which a list of parameters is returned.}
+\item{token}{Specifies a bearer token object.}
 
-\item{read.only}{boolean (TRUE, FALSE). Default=FALSE. Specifies the type of return of the function (see return for details).}
+\item{product_track}{string \{"academic" or "standard"\}.}
 
-\item{custom.param}{vector of strings ("PARAM_1", ...). Default=NULL. Customizes the return, or print, by subsetting the parameters.}
+\item{safe.dir}{string (e.g. "~/home/...").}
 
-\item{open.url}{boolean (TRUE, FALSE). Default=FALSE. If TRUE, opens the documentation page related to the v2.endpoint specified.}
+\item{parse}{boolean \{TRUE or FALSE \}.}
+
+\item{query}{string (e.g. "btc -is:retweet").}
+
+\item{start_time}{string (e.g. "2021-04-08T10:01:00Z").}
+
+\item{end_time}{string (e.g. "2021-04-08T10:02:00Z").}
+
+\item{max_results}{integer \[10, 500\].}
+
+\item{next_token}{}
+
+\item{since_id}{}
+
+\item{until_id}{}
+
+\item{expansions}{vector of strings (e.g. "expansion_\{1\}", ...). Specifies a subset of expansions to be returned (accepts "all"). 
+To request all but some expansions, append "-" in front of each expansion in the input vector (e.g. "-expansion_\{1\}", ...).}
+
+\item{___.fields}{vector of strings (e.g. "field_\{1\}", ...). Specifies a subset of fields to be returned (accepts "all"). To 
+request all but some fields, append "-" in front of each field in the input vector (e.g. "-field_\{1\}", ...).}
 }
 \value{
-A list of parameters of the specified v2.endpoint having NULL as value (if read.only is FALSE), or will print the parameters 
-alongside with their description (if read.only is TRUE). If no v2.endpoint is specified, prints all the endpoints available for request.
+A list or parsed format of tweets and relative data.
 }
 \description{
-Method of [v2_search_fullarchive] and [v2_search_recent()] functions that serves as a container for the parameters of 
-the endpoints available for request on the new Twitter API v2.
+
 }
 \author{
-Victor Plesco
+: Victor Plesco
 }

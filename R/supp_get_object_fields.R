@@ -2,11 +2,13 @@
 #' 
 #' 
 #' @title supp_get_object_fields
-#' @description Getter for the fields of the expansions available for request on the Twitter API v2. 
+#' @description Getter for the fields of the objects available for request on the Twitter API v2. 
 #'
 #' @param object string \{"tweet", "user", "..."\}. Specifies an object for which a comma separated string of fields is returned.
-#' @param fields vector of strings (e.g. "field_\{1\}", ...). Specifies a subset of fields to be returned (accepts "all"). To 
-#' request all but some fields, append "-" in front of each field in the input vector (e.g. "-field_\{1\}", ...). 
+#' @param fields vector of strings (e.g. "field_\{1\}", ...). Specifies a subset of fields to be returned (accepts "all"). To request 
+#' all but some fields, append "-" in front of each field in the input vector (e.g. "-field_\{1\}", ...). 
+#'  
+#' @seealso \url{https://developer.twitter.com/en/docs/twitter-api/fields}
 #' 
 #' @return A comma separated string of fields (e.g. "author_id,geo.place_id").
 #' 
@@ -20,17 +22,14 @@ supp_get_object_fields <- function(object, fields) {
       "text"                ,
       "attachments"         ,
       "author_id"           ,
-      # "context_annotations" ,
+      "context_annotations" ,
       "conversation_id"     ,
       "created_at"          ,
-      # "entities"            ,
+      "entities"            ,
       "geo"                 ,
       "in_reply_to_user_id" ,
       "lang"                ,
-      # "non_public_metrics"  ,
-      # "organic_metrics"     ,
       "possibly_sensitive"  ,
-      # "promoted_metrics"    ,
       "public_metrics"      ,
       "referenced_tweets"   ,
       "reply_settings"      ,
@@ -60,10 +59,7 @@ supp_get_object_fields <- function(object, fields) {
       "type"                ,
       "duration_ms"         ,
       "height"              ,
-      # "non_public_metrics"  ,
-      # "organic_metrics"     ,
       "preview_image_url"   ,
-      # "promoted_metrics"    ,
       "public_metrics"      ,
       "width"               
     ),
@@ -87,7 +83,7 @@ supp_get_object_fields <- function(object, fields) {
       "place_type"          
     ),
     
-    stop("The provided object is wrong or is not handled!")
+    stop("The provided object is wrong or is not handled by racademic!")
   );  
   
   if(identical(fields, "all")) { # Case 1: fields = c("all");
@@ -99,19 +95,21 @@ supp_get_object_fields <- function(object, fields) {
       
       ifelse(any(sub("^-", "", fields) == "all"), # Case 2: fields = c("all", "field_{1}", ...);
              stop("The request to \"all\" is a standalone!"),
-             stop("The following fields do not belong to ", object, # Case 3: fields = c("wrong_field_{1}", "field_{1}", ...);
-                  " [", paste0(setdiff(sub("^-", "", fields), object_switch), collapse = ", "), "]!"));
+             ifelse(any(grepl("^non_public_metrics$|^organic_metrics$|^promoted_metrics$", sub("^-", "", fields))),
+                    stop("The following fields [", paste(grep("non_public_metrics|organic_metrics|promoted_metrics", sub("^-", "", fields), value = TRUE), collapse = ", "),
+                         "] require user authentication are not handled by racademic!"),
+                    stop("The following fields do not belong to object ", object, # Case 3: fields = c("wrong_field_{1}", "field_{1}", ...);
+                         " [", paste0(setdiff(sub("^-", "", fields), object_switch), collapse = ", "), "]!")));
       
     } else {
-      
-      # If no mismatch;
+
       ifelse(any(duplicated(sub("^-", "", fields))), # Case 4: fields = c("field_{1}", "field_{1}", ...);
              stop("Duplicated fields [", paste(sub("^-", "", fields)[which(duplicated(sub("^-", "", fields)))], collapse = ", "), "] have been requested!"),
              ifelse(any(grepl("-", fields) == any(!grepl("-", fields))), # Case 5: fields = c("-field_{1}", "field_{2}", ...);
                     stop("The request to \"-\" is a standalone!"),
-                    ifelse(any(grepl("-", fields)), # Case 6: fields = c("-field_{1}", "-field_{2}", ...);
-                           return(paste(grep(paste(sub("^-", "", fields), collapse = "|"), object_switch, invert = TRUE, value = TRUE), collapse = ",")),
-                           return(paste(fields, collapse = ","))))); # Case 7: fields = c("field_{1}", "field_{2}", ...);
+                           ifelse(any(grepl("-", fields)), # Case 6: fields = c("-field_{1}", "-field_{2}", ...);
+                                  return(paste(grep(paste(sub("^-", "", fields), collapse = "|"), object_switch, invert = TRUE, value = TRUE), collapse = ",")),
+                                  return(paste(fields, collapse = ","))))); # Case 7: fields = c("field_{1}", "field_{2}", ...);)
     };
   };
 };

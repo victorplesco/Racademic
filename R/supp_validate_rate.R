@@ -1,0 +1,27 @@
+#' @author: Victor Plesco
+#' 
+#' 
+#' @title supp_validate_rate
+#' @description 
+#' 
+#' @param round.time POSIXlt (e.g. "2021-04-11 18:54:23 UTC"). Specifies the time of request.
+#' @param limit.remaining integer. Specifies the number of requests left for the 15-minute window.
+#' @param limit.reset integer. Specifies the remaining window before the rate limit resets, in UTC epoch seconds.
+#' 
+#' @export
+supp_validate_rate <- function(round.time, limit.remaining, limit.reset) {
+  
+  if(limit.remaining == 0) {
+    
+    if(as.POSIXlt(Sys.time(), tz = "UTC") < as.POSIXlt(limit.reset, origin = "1970-01-01")){
+      sleep.limit.reset = as.numeric(as.POSIXlt(limit.reset, origin = "1970-01-01") - as.POSIXlt(Sys.time(), tz = "UTC"));
+      cat("\nWaiting", sleep.limit.reset, " minutes for rate limit reset!"); Sys.sleep(sleep.limit.reset);
+    };
+    
+  } else {
+    
+    if((round.time + 1) - as.numeric(as.POSIXlt(Sys.time(), tz = "UTC")) < 1) {
+      cat("\nSleeping for ", (round.time + 1) - as.numeric(as.POSIXlt(Sys.time(), tz = "UTC")));
+      Sys.sleep((round.time + 1) - as.numeric(as.POSIXlt(Sys.time(), tz = "UTC")));}; 
+    };
+};

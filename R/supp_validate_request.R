@@ -2,13 +2,13 @@
 #' 
 #' 
 #' @title supp_validate_request
-#' @description 
+#' @description Support method for validating the query parameters of a specified endpoint (given its query conditions).
 #' 
-#' @param v2.endpoint
-#' @param product_track 
-#' @param ... 
+#' @param v2.endpoint string \{"/2/___"\}. Specifies an endpoint whose query parameters are validated.
+#' @param product_track string \{"academic" or "standard"\}. Specifies the type of developer account in possess.
+#' @param ... mix (e.g. max_results = 10, query = "btc -is:retweet", ect.). Query parameters to be validated.
 #' 
-#' @return
+#' @return A list of query parameters.
 #' 
 #' @export
 supp_validate_request <- function(v2.endpoint, product_track, ...) {
@@ -17,15 +17,14 @@ supp_validate_request <- function(v2.endpoint, product_track, ...) {
   
   # query;
   if(!is.null(param_input$query)) {
-    if(nchar(param_input$query) > param_conditions$query_length) {
-      stop("query length {", nchar(param_input$query), "} bigger than product track permited [", param_conditions$query_length, "]!");
+    if(nchar(param_input$query) > param_conditions$length.query) {
+      stop("query length {", nchar(param_input$query), "} bigger than product track permited [", param_conditions$length.query, "]!");
     } else {param_input$query = param_input$query;}; 
   };
 
   # *_time;
   if(!is.null(param_input$start_time)) {
     if(!is.null(param_input$end_time)) {
-      
       ifelse(is.na(strptime(param_input$start_time, format = "%Y-%m-%dT%H:%M:%SZ")),
              stop("Wrong format of start_time [", param_input$start_time, "] should receive %Y-%m-%dT%H:%M:%SZ!"),
              ifelse(is.na(strptime(param_input$end_time, format = "%Y-%m-%dT%H:%M:%SZ")),
@@ -38,19 +37,19 @@ supp_validate_request <- function(v2.endpoint, product_track, ...) {
     if(!is.null(param_input$end_time)) {
       cat(paste("\nWarning message:\n  start_time not provided, Twitter will set to default:\n\n    end_time:",
                 gsub("T|Z", " ", param_input$end_time), "\n  start_time:",
-                param_conditions$start_time_default(as.POSIXct(param_input$end_time, format = "%Y-%m-%dT%H:%M:%SZ")), "(default)\n\n"));
+                param_conditions$default.start_time(as.POSIXct(param_input$end_time, format = "%Y-%m-%dT%H:%M:%SZ")), "(default)\n\n"));
       param_input$end_time = param_input$end_time;
     }
     else {
       cat(paste("\nWarning message:\n  start_time and end_time not provided, Twitter will set to default:\n\n    end_time:",
-                param_conditions$end_time_default, "(default)\n  start_time:", param_conditions$start_time_default(param_conditions$end_time_default), "(default)\n\n"));
+                param_conditions$default.end_time, "(default)\n  start_time:", param_conditions$default.start_time(param_conditions$default.end_time), "(default)\n\n"));
     };
   };
   
   # max_results;
   if(!is.null(param_input$max_results)) {
-    if(param_input$max_results < param_conditions$max_results_min | param_input$max_results > param_conditions$max_results_max) {
-      stop("max_results {", param_input$max_results, "} has to be in range [", param_conditions$max_results_min, ", ", param_conditions$max_results_max, "]!");
+    if(param_input$max_results < param_conditions$min.max_results | param_input$max_results > param_conditions$max.max_results) {
+      stop("max_results {", param_input$max_results, "} must be in range [", param_conditions$min.max_results, ", ", param_conditions$max.max_results, "]!");
     } else {param_input$max_results = as.character(param_input$max_results);}; 
   };
   
@@ -69,17 +68,17 @@ supp_validate_request <- function(v2.endpoint, product_track, ...) {
     param_input$until_id = param_input$until_id;
   };
   
+  # *.fields;
+  if(!is.null(param_input$tweet.fields)) {param_input$tweet.fields = supp_get_object_fields(object = "tweet", fields = param_input$tweet.fields);};
+  if(!is.null(param_input$user.fields))  {param_input$user.fields  = supp_get_object_fields(object = "user",  fields = param_input$user.fields);};
+  if(!is.null(param_input$media.fields)) {param_input$media.fields = supp_get_object_fields(object = "media", fields = param_input$media.fields);};
+  if(!is.null(param_input$place.fields)) {param_input$place.fields = supp_get_object_fields(object = "place", fields = param_input$place.fields);};
+  if(!is.null(param_input$poll.fields))  {param_input$poll.fields  = supp_get_object_fields(object = "poll",  fields = param_input$poll.fields);};
+  
   # expansions;
   if(!is.null(param_input$expansions)) {
-    param_input$expansions = param_input$expansions;
+    param_input$expansions = supp_get_payload_expansions(payload = param_conditions$payload, expansions = param_input$expansions);
   }; 
-  
-  # *.fields;
-  if(!is.null(param_input$tweet.fields)) {param_input$tweet.fields = supp_get_object_fields(object = "tweet.fields", fields = param_input$tweet.fields);};
-  if(!is.null(param_input$user.fields))  {param_input$user.fields  = supp_get_object_fields(object = "user.fields",  fields = param_input$user.fields);};
-  if(!is.null(param_input$media.fields)) {param_input$media.fields = supp_get_object_fields(object = "media.fields", fields = param_input$media.fields);};
-  if(!is.null(param_input$place.fields)) {param_input$place.fields = supp_get_object_fields(object = "place.fields", fields = param_input$place.fields);};
-  if(!is.null(param_input$poll.fields))  {param_input$poll.fields  = supp_get_object_fields(object = "poll.fields",  fields = param_input$poll.fields);};
   
   return(param_input);
 }; 

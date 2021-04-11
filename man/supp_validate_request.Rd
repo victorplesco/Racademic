@@ -7,15 +7,17 @@
 supp_validate_request(v2.endpoint, product_track, ...)
 }
 \arguments{
-\item{product_track}{}
+\item{v2.endpoint}{string \{"/2/___"\}. Specifies an endpoint whose query parameters are validated.}
 
-\item{...}{}
+\item{product_track}{string \{"academic" or "standard"\}. Specifies the type of developer account in possess.}
+
+\item{...}{mix (e.g. max_results = 10, query = "btc -is:retweet", ect.). Query parameters to be validated.}
 }
 \value{
-
+A list of query parameters.
 }
 \description{
-
+Support method for validating the query parameters of a specified endpoint (given its query conditions).
 }
 \author{
 : Victor Plesco

@@ -9,14 +9,17 @@ supp_get_object_fields(object, fields)
 \arguments{
 \item{object}{string \{"tweet", "user", "..."\}. Specifies an object for which a comma separated string of fields is returned.}
 
-\item{fields}{vector of strings (e.g. "field_\{1\}", ...). Specifies a subset of fields to be returned (accepts "all"). To 
-request all but some fields, append "-" in front of each field in the input vector (e.g. "-field_\{1\}", ...).}
+\item{fields}{vector of strings (e.g. "field_\{1\}", ...). Specifies a subset of fields to be returned (accepts "all"). To request 
+all but some fields, append "-" in front of each field in the input vector (e.g. "-field_\{1\}", ...).}
 }
 \value{
 A comma separated string of fields (e.g. "author_id,geo.place_id").
 }
 \description{
-Getter for the fields of the expansions available for request on the Twitter API v2.
+Getter for the fields of the objects available for request on the Twitter API v2.
+}
+\seealso{
+\url{https://developer.twitter.com/en/docs/twitter-api/fields}
 }
 \author{
 Victor Plesco
