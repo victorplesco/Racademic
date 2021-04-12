@@ -7,9 +7,9 @@
 supp_print_summary(process.data, twitter.chunk)
 }
 \arguments{
-\item{token}{racademic's object. A bearer token associated with a user-created APP (requires a developer account).}
+\item{process.data}{}
 
-\item{v2.endpoint}{string \{"/2/___"\}.}
+\item{twitter.chunk}{}
 }
 \value{
 

@@ -9,15 +9,15 @@
 #' @param safe.dir string (e.g. "~/home/...").
 #' @param parse boolean \{TRUE or FALSE \}.
 #' @param query string (e.g. "btc -is:retweet").
-#' @param start_time string \{%Y-%m-%dT%H:%M:%SZ\}.
-#' @param end_time string \{%Y-%m-%dT%H:%M:%SZ\}.
-#' @param max_results integer \[10, 500\].
+#' @param start_time string \{ \%Y-\%m-\%dT\%H:\%M:\%SZ \}.
+#' @param end_time string \{ \%Y-\%m-\%dT\%H:\%M:\%SZ \}.
+#' @param max_results integer [10, 500].
 #' @param next_token 
 #' @param since_id 
 #' @param until_id 
 #' @param expansions vector of strings (e.g. "expansion_\{1\}", ...). Specifies a subset of expansions to be returned (accepts "all"). 
 #' To request all but some expansions, append "-" in front of each expansion in the input vector (e.g. "-expansion_\{1\}", ...). 
-#' @param ___.fields vector of strings (e.g. "field_\{1\}", ...). Specifies a subset of fields to be returned (accepts "all"). To 
+#' @param _.fields vector of strings (e.g. "field_\{1\}", ...). Specifies a subset of fields to be returned (accepts "all"). To 
 #' request all but some fields, append "-" in front of each field in the input vector (e.g. "-field_\{1\}", ...). 
 #' 
 #' @return A list or parsed format of tweets and relative data.

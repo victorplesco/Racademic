@@ -36,11 +36,11 @@ v2_search_fullarchive(
 
 \item{query}{string (e.g. "btc -is:retweet").}
 
-\item{start_time}{string \{%Y-%m-%dT%H:%M:%SZ\}.}
+\item{start_time}{string \{ \%Y-\%m-\%dT\%H:\%M:\%SZ \}.}
 
-\item{end_time}{string \{%Y-%m-%dT%H:%M:%SZ\}.}
+\item{end_time}{string \{ \%Y-\%m-\%dT\%H:\%M:\%SZ \}.}
 
-\item{max_results}{integer \[10, 500\].}
+\item{max_results}{integer [10, 500].}
 
 \item{next_token}{}
 
@@ -51,7 +51,7 @@ v2_search_fullarchive(
 \item{expansions}{vector of strings (e.g. "expansion_\{1\}", ...). Specifies a subset of expansions to be returned (accepts "all"). 
 To request all but some expansions, append "-" in front of each expansion in the input vector (e.g. "-expansion_\{1\}", ...).}
 
-\item{___.fields}{vector of strings (e.g. "field_\{1\}", ...). Specifies a subset of fields to be returned (accepts "all"). To 
+\item{_.fields}{vector of strings (e.g. "field_\{1\}", ...). Specifies a subset of fields to be returned (accepts "all"). To 
 request all but some fields, append "-" in front of each field in the input vector (e.g. "-field_\{1\}", ...).}
 }
 \value{
