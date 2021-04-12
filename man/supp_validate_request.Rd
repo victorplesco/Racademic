@@ -14,7 +14,7 @@ supp_validate_request(v2.endpoint, product_track, ...)
 \item{...}{mix (e.g. max_results = 10, query = "btc -is:retweet", ect.). Query parameters to be validated.}
 }
 \value{
-A list of query parameters.
+A list of validated query parameters.
 }
 \description{
 Support method for validating the query parameters of a specified endpoint (given its query conditions).

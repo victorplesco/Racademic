@@ -26,7 +26,7 @@ v2_search_fullarchive(
 )
 }
 \arguments{
-\item{token}{Specifies a bearer token object.}
+\item{token}{racademic's object. A bearer token associated with a user-created APP (requires a developer account).}
 
 \item{product_track}{string \{"academic" or "standard"\}.}
 
@@ -36,9 +36,9 @@ v2_search_fullarchive(
 
 \item{query}{string (e.g. "btc -is:retweet").}
 
-\item{start_time}{string (e.g. "2021-04-08T10:01:00Z").}
+\item{start_time}{string \{%Y-%m-%dT%H:%M:%SZ\}.}
 
-\item{end_time}{string (e.g. "2021-04-08T10:02:00Z").}
+\item{end_time}{string \{%Y-%m-%dT%H:%M:%SZ\}.}
 
 \item{max_results}{integer \[10, 500\].}
 

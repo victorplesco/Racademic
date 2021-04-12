@@ -2,7 +2,7 @@
 #' 
 #' 
 #' @title supp_get_object_fields
-#' @description Getter for the fields of the objects available for request on the Twitter API v2. 
+#' @description Getter for the fields of a specified object. 
 #'
 #' @param object string \{"tweet", "user", "..."\}. Specifies an object for which a comma separated string of fields is returned.
 #' @param fields vector of strings (e.g. "field_\{1\}", ...). Specifies a subset of fields to be returned (accepts "all"). To request 

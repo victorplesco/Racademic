@@ -8,12 +8,12 @@
 #' @param product_track string \{"academic" or "standard"\}. Specifies the type of developer account in possess.
 #' @param ... mix (e.g. max_results = 10, query = "btc -is:retweet", ect.). Query parameters to be validated.
 #' 
-#' @return A list of query parameters.
+#' @return A list of validated query parameters.
 #' 
 #' @export
 supp_validate_request <- function(v2.endpoint, product_track, ...) {
   
-  param_input = list(...); param_conditions = supp_get_conditions(v2.endpoint = v2.endpoint, product_track = product_track);
+  param_input = list(...); param_conditions = supp_get_request_conditions(v2.endpoint = v2.endpoint, product_track = product_track);
   
   # query;
   if(!is.null(param_input$query)) {

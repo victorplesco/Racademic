@@ -2,7 +2,7 @@
 #' 
 #' 
 #' @title supp_get_payload_expansions
-#' @description Getter for the expansions of the payloads available for request on the Twitter API v2. 
+#' @description Getter for the expansions of a specified payload. 
 #'
 #' @param payload string \{"tweet" or "user"\}. Specifies a payload for which a comma separated string of expansions is returned.
 #' @param expansions vector of strings (e.g. "expansion_\{1\}", ...). Specifies a subset of expansions to be returned (accepts "all"). 

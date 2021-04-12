@@ -2,10 +2,11 @@
 
 export(supp_create_safedir)
 export(supp_forward_request)
-export(supp_get_conditions)
 export(supp_get_object_fields)
 export(supp_get_payload_expansions)
-export(supp_validate_rate)
+export(supp_get_request_conditions)
+export(supp_print_summary)
+export(supp_validate_limitrate)
 export(supp_validate_request)
 export(supp_validate_response)
 export(v2_create_bearer_token)

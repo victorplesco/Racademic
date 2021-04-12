@@ -7,12 +7,16 @@
 supp_validate_response(token, v2.endpoint, param_list)
 }
 \arguments{
-\item{v2.endpoint}{}
+\item{token}{racademic's object. Specifies a bearer token associated with a user-created APP (requires a developer account).}
 
-\item{param_list}{}
+\item{v2.endpoint}{string \{"/2/___"\}. Specifies an endpoint to which a request is made.}
+
+\item{param_list}{mix (e.g. max_results = 10, query = "btc -is:retweet", ect.). Specifies list of parameters to be used within request.}
 }
 \value{
-
+If the request is successful returns a list with sub-lists "data", storing a tweet's data (each item is a tweet), and 
+"includes", storing a tweet's expansions. If the request isn't successful appends, to the so far downloaded data, a sub-list "errors", 
+storing the details of the errors in the request.
 }
 \description{
 

@@ -16,7 +16,7 @@ To request all but some expansions, append "-" in front of each expansion in the
 A comma separated string of expansions (e.g. "author_id,geo.place_id").
 }
 \description{
-Getter for the expansions of the payloads available for request on the Twitter API v2.
+Getter for the expansions of a specified payload.
 }
 \seealso{
 \url{https://developer.twitter.com/en/docs/twitter-api/expansions}

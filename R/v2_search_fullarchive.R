@@ -4,7 +4,7 @@
 #' @title v2_search_fullarchive
 #' @description 
 #' 
-#' @param token Specifies a bearer token object.
+#' @param token racademic's object. A bearer token associated with a user-created APP (requires a developer account).
 #' @param product_track string \{"academic" or "standard"\}.
 #' @param safe.dir string (e.g. "~/home/...").
 #' @param parse boolean \{TRUE or FALSE \}.
@@ -36,8 +36,8 @@ v2_search_fullarchive <- function(token, product_track, safe.dir = NULL, parse =
     return(param_list);
   } else {
     twitter_data = supp_forward_request( # Download data;
-      token = token, v2.endpoint = "/2/tweets/search/all", param_list = param_list,
-      safe.dir = safe.dir, sleep.work = sleep.work);
+      token = token, v2.endpoint = "/2/tweets/search/all", 
+      param_list = param_list, safe.dir = safe.dir);
     
     ifelse(!is.null(parse),
            return(twitter_data), # Return data in list format;

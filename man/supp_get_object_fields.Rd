@@ -16,7 +16,7 @@ all but some fields, append "-" in front of each field in the input vector (e.g.
 A comma separated string of fields (e.g. "author_id,geo.place_id").
 }
 \description{
-Getter for the fields of the objects available for request on the Twitter API v2.
+Getter for the fields of a specified object.
 }
 \seealso{
 \url{https://developer.twitter.com/en/docs/twitter-api/fields}

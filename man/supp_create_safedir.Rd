@@ -7,15 +7,15 @@
 supp_create_safedir(safe.dir)
 }
 \arguments{
-\item{safe.dir}{string (e.g. "~/home/..."). Specifies the path to a directory.}
+\item{safe.dir}{string (e.g. "~/home/..."). Specifies path to a directory.}
 }
 \value{
-The path to the newly created safe directory "/data__<Sys.Date>_<Sys.Time>".
+Path to the newly created directory "/data__<Sys.Date>_<Sys.Time>".
 }
 \description{
-Support method aiming to safeguard in process downloaded data from possible crashes of the program. Given a path to a
-directory a "/data_<Sys.Date>_<Sys.Time>" folder is created with two sub-folders: "/content", storing each response's data in a
-raw format (which can subsequently be parsed), and "/metadata", storing process summary metadata (e.g. next_token, total_counts, ect.).
+Support method for safeguarding in process downloaded data from possible crashes of the program. Given a path to an 
+existing directory a "/data_<Sys.Date>_<Sys.Time>" folder is created with two sub-folders: "/content", aiming to store each response's 
+parsed data in a .RDS file, and "/metadata", aiming to store process summary metadata (e.g. next_token, daily_counts, ect.).
 }
 \author{
 : Victor Plesco

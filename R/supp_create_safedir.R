@@ -2,13 +2,13 @@
 #' 
 #' 
 #' @title supp_create_safedir
-#' @description Support method aiming to safeguard in process downloaded data from possible crashes of the program. Given a path to a
-#' directory a "/data_<Sys.Date>_<Sys.Time>" folder is created with two sub-folders: "/content", storing each response's data in a
-#' raw format (which can subsequently be parsed), and "/metadata", storing process summary metadata (e.g. next_token, total_counts, ect.).
+#' @description Support method for safeguarding in process downloaded data from possible crashes of the program. Given a path to an 
+#' existing directory a "/data_<Sys.Date>_<Sys.Time>" folder is created with two sub-folders: "/content", aiming to store each response's 
+#' parsed data in a .RDS file, and "/metadata", aiming to store process summary metadata (e.g. next_token, daily_counts, ect.).
 #' 
-#' @param safe.dir string (e.g. "~/home/..."). Specifies the path to a directory.
+#' @param safe.dir string (e.g. "~/home/..."). Specifies path to a directory.
 #' 
-#' @return The path to the newly created safe directory "/data__<Sys.Date>_<Sys.Time>".
+#' @return Path to the newly created directory "/data__<Sys.Date>_<Sys.Time>".
 #' 
 #' @export
 supp_create_safedir <- function(safe.dir) {
@@ -31,6 +31,5 @@ supp_create_safedir <- function(safe.dir) {
     } else {stop("The specified safe.dir doesn't exist. Provide an existing one!");};
     
   };
-  
   return(paste0(safe.dir, data.dir, "/"));
 };
