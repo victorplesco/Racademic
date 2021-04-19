@@ -1,24 +1,22 @@
-#' @author: Victor Plesco
+#' @author Victor Plesco
 #' 
 #' 
-#' @title supp_create_safedir
-#' @description Support method for safeguarding in process downloaded data from possible crashes of the program. Given a path to an 
-#' existing directory a "/data_<Sys.Date>_<Sys.Time>" folder is created with two sub-folders: "/content", aiming to store each response's 
-#' parsed data in a .RDS file, and "/metadata", aiming to store process summary metadata (e.g. next_token, daily_counts, ect.).
+#' @title supp_make.safedir
+#' @description Creates a "/racademic_data_<Sys.Date>_<Sys.Time>" directory with two sub-folders: "content" and "execution". 
 #' 
-#' @param safe.dir string (e.g. "~/home/..."). Specifies path to a directory.
+#' @param safe.dir string (e.g. "~/home/..."). Default=NULL. Path to an existing directory (serving as a data backup). If NULL, considers the home directory.
 #' 
-#' @return Path to the newly created directory "/data__<Sys.Date>_<Sys.Time>".
+#' @return Path to the newly created directory.
 #' 
 #' @export
-supp_create_safedir <- function(safe.dir) {
+supp_make.safedir <- function(safe.dir = NULL) {
   
   data.dir = paste0("racademic_data_", format(Sys.Date(), format = "%y%m%d"), "_", format(Sys.time(), format = "%H%M%S")); # Create data folder;
-  if(is.null(safe.dir)) { # If no safe.dir specified, use racademic's folder as base;
+  if(is.null(safe.dir)) { # If no safe.dir specified, uses home directory as base;
     
-    safe.dir = paste0(sub("racademic.*", "", dirname(rstudioapi::getSourceEditorContext()$path)), "racademic/");
+    safe.dir = "~/";
     while(data.dir %in% list.files(safe.dir)) { # Ensures no conflicts among directory names;
-      data.dir = paste0("data_", format(Sys.Date(), format = "%y%m%d"), "_", format(Sys.time(), format = "%H%M%S")); Sys.sleep(0.1);
+      data.dir = paste0("racademic_data_", format(Sys.Date(), format = "%y%m%d"), "_", format(Sys.time(), format = "%H%M%S")); Sys.sleep(0.1);
     }; dir.create(paste0(safe.dir, data.dir)); dir.create(paste0(safe.dir, data.dir, "/content/")); dir.create(paste0(safe.dir, data.dir, "/metadata/"));
     
   } else {

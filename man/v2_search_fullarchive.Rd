@@ -6,10 +6,7 @@
 \usage{
 v2_search_fullarchive(
   token,
-  product_track,
   safe.dir = NULL,
-  parse = FALSE,
-  test = FALSE,
   query,
   start_time = NULL,
   end_time = NULL,
@@ -26,40 +23,44 @@ v2_search_fullarchive(
 )
 }
 \arguments{
-\item{token}{racademic's object. A bearer token associated with a user-created APP (requires a developer account).}
+\item{token}{object of class v2_create_token(). Bearer token associated with a user-created APP (requires a developer account).}
 
-\item{product_track}{string \{"academic" or "standard"\}.}
+\item{safe.dir}{string (e.g. "~/home/..."). Default=NULL. Path to an existing directory (serving as a data backup). If NULL, considers 
+the home directory.}
 
-\item{safe.dir}{string (e.g. "~/home/...").}
+\item{query}{string (e.g. "btc -is:retweet"). One query for matching Tweets.}
 
-\item{parse}{boolean \{TRUE or FALSE \}.}
+\item{start_time}{string \{"\%Y-\%m-\%dT\%H:\%M:\%SZ"\} (ISO 8601/RFC 3339). The oldest UTC timestamp from which the Tweets will be
+provided. Timestamp is in second granularity and is inclusive (for example, 12:00:01 includes the first second of the minute).}
 
-\item{query}{string (e.g. "btc -is:retweet").}
+\item{end_time}{string \{"\%Y-\%m-\%dT\%H:\%M:\%SZ"\} (ISO 8601/RFC 3339).}
 
-\item{start_time}{string \{ \%Y-\%m-\%dT\%H:\%M:\%SZ \}.}
+\item{max_results}{integer [10, 500]. The maximum number of search results to be returned by a request. A number between 10 an the 
+system limit (currently 500). By default, a request response will return 10 results.}
 
-\item{end_time}{string \{ \%Y-\%m-\%dT\%H:\%M:\%SZ \}.}
+\item{next_token}{string. This parameter is used to get the next "page" of results. The value used with the parameter is pulled directly
+from the response provided by the API, and should not be modified.}
 
-\item{max_results}{integer [10, 500].}
+\item{since_id}{string. Returns results with a Tweet ID greater than the specified ID. The ID specified is exclusive and responses
+will not include it. If included with the same request as a `start_time` parameter, only `since_id` will be used.}
 
-\item{next_token}{}
-
-\item{since_id}{}
-
-\item{until_id}{}
+\item{until_id}{string. Returns results with a Tweet ID less than (that is, older than) the specified ID. Used with `since_id`. The ID
+specified is exclusive and responses will not include it.}
 
 \item{expansions}{vector of strings (e.g. "expansion_\{1\}", ...). Specifies a subset of expansions to be returned (accepts "all"). 
 To request all but some expansions, append "-" in front of each expansion in the input vector (e.g. "-expansion_\{1\}", ...).}
+
+\item{product_track}{string \{"academic" or "standard"\}. Type of product track.}
 
 \item{_.fields}{vector of strings (e.g. "field_\{1\}", ...). Specifies a subset of fields to be returned (accepts "all"). To 
 request all but some fields, append "-" in front of each field in the input vector (e.g. "-field_\{1\}", ...).}
 }
 \value{
-A list or parsed format of tweets and relative data.
+A list of tweets and their expansions (with attached errors if encountered).
 }
 \description{
 
 }
 \author{
-: Victor Plesco
+Victor Plesco
 }

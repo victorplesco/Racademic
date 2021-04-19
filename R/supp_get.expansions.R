@@ -1,19 +1,20 @@
 #' @author Victor Plesco
 #' 
 #' 
-#' @title supp_get_payload_expansions
-#' @description Getter for the expansions of a specified payload. 
+#' @title supp_get.expansions
+#' 
+#' @description Returns a customized set of expansions for a Twitter payload. 
 #'
-#' @param payload string \{"tweet" or "user"\}. Specifies a payload for which a comma separated string of expansions is returned.
-#' @param expansions vector of strings (e.g. "expansion_\{1\}", ...). Specifies a subset of expansions to be returned (accepts "all"). 
-#' To request all but some expansions, append "-" in front of each expansion in the input vector (e.g. "-expansion_\{1\}", ...). 
+#' @param payload string \{"tweet" or "user"\}. Type of Twitter payload.
+#' @param expansions vector of strings (e.g. "expansion_\{1\}", ...). Expansions to be returned (accepts "all"). To request all but some 
+#' expansions, append "-" in front of each expansion in the input vector (e.g. "-expansion_\{1\}", ...). 
 #' 
 #' @seealso \url{https://developer.twitter.com/en/docs/twitter-api/expansions}
 #' 
 #' @return A comma separated string of expansions (e.g. "author_id,geo.place_id").
 #' 
 #' @export
-supp_get_payload_expansions <- function(payload, expansions) {
+supp_get.expansions <- function(payload, expansions) {
   
   payload_switch = switch(payload,
                          

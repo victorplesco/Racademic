@@ -1,17 +1,16 @@
-#' @author: Victor Plesco
+#' @author Victor Plesco
 #' 
 #' 
-#' @title supp_get_request_conditions
-#' @description Getter for the query conditions of the combination of an endpoint and a product track.
+#' @title supp_get.conditions
+#' @description Returns a request's conditions based on its endpoint and the type of product track used.
+#'  
+#' @param v2.endpoint string \{"/2/tweets/search/all" or "/2/tweets/search/recent"\}. Twitter API v2 Search Endpoint.
+#' @param product_track string \{"academic" or "standard"\}. Type of product track. 
 #' 
-#' @param v2.endpoint string \{"/2/___"\}. Specifies an endpoint for which a list of query conditions is returned.
-#' @param product_track string \{"academic" or "standard"\}. Specifies the type of developer account in possess to which specific
-#' query conditions apply. 
-#' 
-#' @return A list of query conditions (e.g. max.max_results = 500, min.max_results = 10, ect.).
+#' @return A list of conditions.
 #' 
 #' @export
-supp_get_request_conditions <- function(v2.endpoint, product_track) {
+supp_get.conditions <- function(v2.endpoint, product_track) {
   
   switch(v2.endpoint,
    
@@ -21,8 +20,7 @@ supp_get_request_conditions <- function(v2.endpoint, product_track) {
          min.max_results       = 10,
          default.end_time      = Sys.time() - 30, # System time minus 30 seconds;
          default.start_time    = {function(end_time) {end_time - (60 * 60 * 24 * 30)}}, # end_time minus 30 days;
-         length.query          = switch(product_track, academic = 1024, standard = 512, 
-                                        stop("The provided product track is wrong or is not handled by racademic!")),
+         length.query          = 1024,
          payload               = "tweet"
        ),
    

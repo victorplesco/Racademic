@@ -1,19 +1,19 @@
 #' @author Victor Plesco
 #' 
 #' 
-#' @title supp_get_object_fields
-#' @description Getter for the fields of a specified object. 
+#' @title supp_get.fields
+#' @description Returns a customized set of fields of a Twitter object. 
 #'
-#' @param object string \{"tweet", "user", "..."\}. Specifies an object for which a comma separated string of fields is returned.
-#' @param fields vector of strings (e.g. "field_\{1\}", ...). Specifies a subset of fields to be returned (accepts "all"). To request 
-#' all but some fields, append "-" in front of each field in the input vector (e.g. "-field_\{1\}", ...). 
+#' @param object string \{"tweet", "user", "media", "poll", "place"\}. Type of Twitter object.
+#' @param fields vector of strings (e.g. "field_\{1\}", ...). Fields to be returned (accepts "all"). To request all but some fields, 
+#' append "-" in front of each field in the input vector (e.g. "-field_\{1\}", ...). 
 #'  
 #' @seealso \url{https://developer.twitter.com/en/docs/twitter-api/fields}
 #' 
 #' @return A comma separated string of fields (e.g. "author_id,geo.place_id").
 #' 
 #' @export
-supp_get_object_fields <- function(object, fields) {
+supp_get.fields <- function(object, fields) {
   
   object_switch = switch(object,
                              
