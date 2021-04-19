@@ -2,7 +2,7 @@
 #' 
 #' 
 #' @title v2_search_fullarchive
-#' @description 
+#' @description Get tweets data on statuses identified via search query.
 #' 
 #' @param token object of class v2_create_token(). Bearer token associated with a user-created APP (requires a developer account).
 #' @param product_track string \{"academic" or "standard"\}. Type of product track. 
