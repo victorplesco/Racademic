@@ -59,7 +59,7 @@ request all but some fields, append "-" in front of each field in the input vect
 A list of tweets and their expansions (with attached errors if encountered).
 }
 \description{
-
+Get tweets data on statuses identified via search query.
 }
 \author{
 Victor Plesco

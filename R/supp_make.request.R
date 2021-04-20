@@ -22,11 +22,11 @@ supp_make.request <- function(token, v2.endpoint, param_list, safe.dir = NULL) {
                                          `media` = list(), 
                                          `polls` = list()),
                       `errors` = list());
-  exe.data = list(`requests` = 0, `tweets` = 0, `daily_counts` = list(), `daytime_reached` = list(),
+  exe.data = list(`requests` = 0, `tweets` = 0, `daily_counts` = list(), `daytime_reached` = NULL,
                   `previous_token` = NULL, `current_token` = NULL, `next_token` = NULL);
   
   # The following repeat statement will handle pagination;
-  repeat { r.time = as.POSIXlt(Sys.time(), tz = "UTC");
+  repeat {
   
     response_list = supp_eval.response(token = token, v2.endpoint = v2.endpoint, param_list = param_list);
     if(as.numeric(response_list[1]) != 0) { # If successful response;
@@ -50,11 +50,6 @@ supp_make.request <- function(token, v2.endpoint, param_list, safe.dir = NULL) {
       ifelse(is.null(response_list$parsed.content$meta$next_token), # If next_token is NULL;
              return(twitter_data), # Returns the so far downloaded data;
              {param_list$next_token = response_list$parsed.content$meta$next_token;}); # Updates next_token;
-
-      # Handling rate limits;
-      supp_eval.ratelimit(request.time = r.time,
-                          request.remaining = as.numeric(response_list$response$headers$`x-rate-limit-remaining`),
-                          request.reset = as.numeric(response_list$response$headers$`x-rate-limit-reset`));
       
     } else {twitter_data$errors = append(twitter_data$errors, response_list$parsed.content$errors); return(twitter_data);}};
 };

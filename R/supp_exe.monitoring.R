@@ -22,7 +22,7 @@ supp_exe.monitoring <- function(exe.data, api.data, par.data, safe.dir) {
 
   # daily_counts;
   counts = as.list(table(as.character(strptime(lapply(api.data$data, "[[", "created_at"), format = "%Y-%m-%d"))));
-  if(all(counts %in% exe.data$daily_counts)) {
+  if(all(names(counts) %in% names(exe.data$daily_counts))) {
     
     exe.data$daily_counts[which(names(exe.data$daily_counts) %in% names(counts))] = 
       mapply("+", exe.data$daily_counts[names(exe.data$daily_counts) %in% names(counts)], counts);
@@ -36,7 +36,7 @@ supp_exe.monitoring <- function(exe.data, api.data, par.data, safe.dir) {
   };
   
   # daytime_reached;
-  exe.data$daytime_reached = min(strptime(lapply(api.data$data, "[[", "created_at"), format = "%Y-%m-%dT%H:%M:%S.000Z"));
+  exe.data$daytime_reached = as.character(min(strptime(lapply(api.data$data, "[[", "created_at"), format = "%Y-%m-%dT%H:%M:%S.000Z")));
   
   # *_token;
   exe.data$previous_token = exe.data$current_token;

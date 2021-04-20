@@ -4,11 +4,9 @@
 \alias{supp_eval.ratelimit}
 \title{supp_eval.ratelimit}
 \usage{
-supp_eval.ratelimit(request.time, request.remaining, request.reset)
+supp_eval.ratelimit(request.remaining, request.reset)
 }
 \arguments{
-\item{request.time}{object of class POSIXlt (e.g. "2021-04-11 18:54:23 UTC"). Time of request.}
-
 \item{request.remaining}{integer. Number of requests left for the 15-minute window.}
 
 \item{request.reset}{integer. Remaining window before the rate limit resets (in UTC epoch seconds).}

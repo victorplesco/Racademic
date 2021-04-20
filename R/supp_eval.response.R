@@ -13,7 +13,15 @@
 #' @export
 supp_eval.response <- function(token, v2.endpoint, param_list) {
   
+  safe.guardian = 0;
   repeat { # Ensures continuability in case of server breakdown;
+    
+    safe.guardian = safe.guardian + 1; if(safe.guardian > 10) {
+      
+      cat("\nSomething went wrong. Aborting program to avoid being rate limited!\n\n");
+      return(list(0, `response` = response, `parsed.content` = parsed.content));
+      
+    };
     
     response = httr::GET(url = paste0("https://api.twitter.com", v2.endpoint), 
                          httr::add_headers(.headers = token), query = param_list); 
@@ -22,48 +30,87 @@ supp_eval.response <- function(token, v2.endpoint, param_list) {
     parsed.content = httr::content(response, as = "parsed");
 
     # Switch Legend:
-    # NULL - Status Code == [500, 504] (repeats);
-    # 0    - Status Code != 200 & Status Code == 200 + Unsolvable Partial Errors (ends program);
-    # 1    - Status Code == 200 + No Partial Errors (continues program);
-    # 2    - Status Code == 200 + Solvable Partial Errors (continues program);
+    # 200 = OK {The request was successful!}
+    # 429 = Too Many Requests {Returned when a request cannot be served due to the App's rate limit having been exhausted.}
+    # 500 = Internal Server Error {Something is broken. Usually a temporary error.}
+    # 502 = Bad Gateway {Twitter is down, or being upgraded.}
+    # 503 = Service Unavailable {The Twitter servers are up, but overloaded with requests.}
+    # 504 = Gateway Timeout {The Twitter servers are up, but the request couldn't be serviced due to some failure.}
     
-    if(any(response$status_code %in% c(500:504))) { # Switch NULL: Status Code == [500, 504];
-      
-      cat("\n\nWarning message:\n  Program has stopped due to error in response. Trying again in 2s!\n",
-          "\n Title:", as.character(parsed.content$title), 
-          "\n Status Code:", as.character(response$status_code), 
-          "\n Details:", as.character(parsed.content$detail),
-          "\n For more details please visit:", as.character(parsed.content$type), "\n\n");
-      Sys.sleep(10);
-      
-    } else {
-      
-      if(response$status_code == 200) {
-        
-        if("errors" %in% names(parsed.content)) {
-          
-          # Switch 0: Status Code == 200 + Unsolvable Partial Errors (usage capped problem, invalid request problem, ect.);
-          if(any(lapply(parsed.content$errors, "[[", "title") %in% c("Forbidden", "Not Found Error", "Authorization Error") == FALSE)) {
-            cat("\n\nWarning message:\n  Program has stopped due to partial errors in response. Returning errors!\n\n");
-            return(list(0, `response` = response, `parsed.content` = parsed.content));
-            
-          } else {# Switch 2: Status Code == 200 + Solvable Partial Errors (resource not found problem, resource unauthorized problem, ect.);
-            cat("\n\nWarning message:\n  Program has encountered partial errors in response. Attaching to payload!\n\n");
-            return(list(2, `response` = response, `parsed.content` = parsed.content));
-            
-          };
-        # Switch 1: Status Code == 200 + No Partial Errors (i.e. successful request);
-        } else {return(list(1, `response` = response, `parsed.content` = parsed.content));};
-        
-      } else { # Switch 0: Status Code != 200 (i.e. unsuccessful request);
-        cat("\n\nWarning message:\n  Program has stopped due to error in response. Returning errors!\n",
-            "\n Title:", as.character(parsed.content$title), 
-            "\n Status Code:", as.character(response$status_code), 
-            "\n Details:", as.character(parsed.content$detail),
-            "\n For more details please visit:", as.character(parsed.content$type), "\n\n");
-        return(list(0, `response` = response, `parsed.content` = parsed.content));
-        
-      };
-    };
+    switch(as.character(response$status_code),
+           
+           `429` = 
+             {
+               cat("\n\nWarning message:\n  Program has stopped due to error in response. Recovering rate limits!\n",
+                   "\n Title:", as.character(parsed.content$title), 
+                   "\n Status Code:", as.character(response$status_code), 
+                   "\n Details:", as.character(parsed.content$detail),
+                   "\n For more details please visit:", as.character(parsed.content$type), "\n\n");
+               
+               # Handling rate limits;
+               supp_eval.ratelimit(request.remaining = as.numeric(response$headers$`x-rate-limit-remaining`),
+                                   request.reset = as.numeric(response$headers$`x-rate-limit-reset`));
+             },
+           
+           `500` = 
+             {
+               cat("\n\nWarning message:\n  Program has stopped due to error in response. Trying again in 10s!\n",
+                   "\n Title:", as.character(parsed.content$title), 
+                   "\n Status Code:", as.character(response$status_code), 
+                   "\n Details:", as.character(parsed.content$detail),
+                   "\n For more details please visit:", as.character(parsed.content$type), "\n\n");
+               Sys.sleep(10);
+             },
+           
+           `502` = 
+             {
+               cat("\n\nWarning message:\n  Program has stopped due to error in response. Trying again in 10s!\n",
+                   "\n Title:", as.character(parsed.content$title), 
+                   "\n Status Code:", as.character(response$status_code), 
+                   "\n Details:", as.character(parsed.content$detail),
+                   "\n For more details please visit:", as.character(parsed.content$type), "\n\n");
+               Sys.sleep(10);
+             },
+           
+           `503` = 
+             {
+               cat("\n\nWarning message:\n  Program has stopped due to error in response. Trying again in 10s!\n",
+                   "\n Title:", as.character(parsed.content$title), 
+                   "\n Status Code:", as.character(response$status_code), 
+                   "\n Details:", as.character(parsed.content$detail),
+                   "\n For more details please visit:", as.character(parsed.content$type), "\n\n");
+               Sys.sleep(10);
+             },
+           
+           `200` = 
+             {
+               
+               # Handling rate limits;
+               supp_eval.ratelimit(request.remaining = as.numeric(response$headers$`x-rate-limit-remaining`),
+                                   request.reset = as.numeric(response$headers$`x-rate-limit-reset`));
+               
+               if("errors" %in% names(parsed.content)) {
+                 
+                 if(any(lapply(parsed.content$errors, "[[", "title") %in% c("Forbidden", "Not Found Error", "Authorization Error") == FALSE)) {
+                   cat("\n\nWarning message:\n  Program has stopped due to partial errors in response. Returning errors!\n\n");
+                   return(list(0, `response` = response, `parsed.content` = parsed.content));
+                   
+                 } else {
+                   cat("\n\nWarning message:\n  Program has encountered partial errors in response. Attaching to payload!\n\n");
+                   return(list(2, `response` = response, `parsed.content` = parsed.content));
+                 };
+                 
+               } else {return(list(1, `response` = response, `parsed.content` = parsed.content));};
+             },
+           
+           { # For the remaining cases (not evaluated yet);
+             cat("\n\nWarning message:\n  Program has stopped due to error in response. Returning errors!\n",
+                 "\n Title:", as.character(parsed.content$title), 
+                 "\n Status Code:", as.character(response$status_code), 
+                 "\n Details:", as.character(parsed.content$detail),
+                 "\n For more details please visit:", as.character(parsed.content$type), "\n\n");
+             return(list(0, `response` = response, `parsed.content` = parsed.content));
+           }
+          );
   };
 };
