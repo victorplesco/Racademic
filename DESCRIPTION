@@ -3,7 +3,7 @@ Package: racademic
 Title: Collect Twitter Full-Archive Data 
 Version: 0.0.1
 Author: Victor Plesco <plesco.victor@gmail.com>
-Description: An implementation of calls designed to access Tweets via the
+Description: An implementation of calls designed to access tweets via the
 	recent and full-archive search REST endpoints of the Twitter API v2.
 License: MIT LICENSE
 Depends: 
